@@ -2,6 +2,7 @@ package com.jesussoto.android.popularmovies.movies;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,9 @@ public class MoviesActivity extends AppCompatActivity {
 
     @BindView(R.id.progress)
     ProgressBar mProgressIndicator;
+
+    @BindView(R.id.empty_favorites)
+    View mEmptyFavoritesView;
 
     @BindView(R.id.empty_container)
     ViewGroup mEmptyContainer;
@@ -103,13 +107,20 @@ public class MoviesActivity extends AppCompatActivity {
     private void bindViewModel() {
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(MoviesViewModel.class);
 
-        mViewModel.getMoviesPagedList().observe(
-                this, pagedList -> mAdapter.submitList(pagedList));
+        mViewModel.getMoviesPagedList().observe(this, this::submitList);
 
-        mViewModel.getNetworkState().observe(
-                this, networkState -> mAdapter.setNetworkState(networkState));
+        mViewModel.getNetworkState().observe(this, mAdapter::setNetworkState);
 
         mViewModel.getInitialLoadState().observe(this, this::updateView);
+    }
+
+    private void submitList(PagedList<Movie> pagedList) {
+        mAdapter.submitList(pagedList);
+        showEmptyFavoritesView(pagedList.isEmpty());
+    }
+
+    private void showEmptyFavoritesView(boolean show) {
+        mEmptyFavoritesView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -195,6 +206,10 @@ public class MoviesActivity extends AppCompatActivity {
         mMoviesRecyclerView.setVisibility(listVisibility);
         mProgressIndicator.setVisibility(progressVisibility);
         mEmptyContainer.setVisibility(errorVisibility);
+
+        if (errorVisibility == View.VISIBLE) {
+            showEmptyFavoritesView(false);
+        }
     }
 
     /**
