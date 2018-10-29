@@ -1,11 +1,11 @@
-package com.jesussoto.android.popularmovies.api;
+package com.jesussoto.android.popularmovies.api.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.jesussoto.android.popularmovies.model.Movie;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 
 import java.util.List;
 
-public class MoviesResponse {
+public class PagedResultResponse<T> {
 
     @SerializedName("page")
     private Integer page;
@@ -17,7 +17,7 @@ public class MoviesResponse {
     private Integer totalPages;
 
     @SerializedName("results")
-    private List<Movie> results;
+    private List<T> results;
 
     public Integer getPage() {
         return page;
@@ -31,7 +31,8 @@ public class MoviesResponse {
         return totalPages;
     }
 
-    public List<Movie> getResults() {
+    public List<T> getResults() {
         return results;
     }
+
 }

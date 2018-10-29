@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.jesussoto.android.popularmovies.R;
 import com.jesussoto.android.popularmovies.api.Resource;
 import com.jesussoto.android.popularmovies.api.WebServiceUtils;
-import com.jesussoto.android.popularmovies.model.Movie;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -44,6 +44,8 @@ public class MoviesListAdapter extends PagedListAdapter<Movie, RecyclerView.View
     private static final int VIEW_TYPE_PROGRESS = 0;
     private static final int VIEW_TYPE_ITEM = 1;
 
+    private Picasso mPicasso;
+
     private Resource.Status mNetworkState;
 
     private OnMovieTappedListener mMovieTappedListener;
@@ -51,8 +53,9 @@ public class MoviesListAdapter extends PagedListAdapter<Movie, RecyclerView.View
     @NonNull
     private OnRetryCallback mRetryCallback;
 
-    MoviesListAdapter(@NonNull OnRetryCallback retryCallback) {
+    MoviesListAdapter(Picasso picasso, @NonNull OnRetryCallback retryCallback) {
         super(Movie.DIFF_CALLBACK);
+        mPicasso = picasso;
         mRetryCallback = retryCallback;
     }
 
@@ -63,7 +66,7 @@ public class MoviesListAdapter extends PagedListAdapter<Movie, RecyclerView.View
             return NetworkStateItemViewHolder.create(parent, mRetryCallback);
         }
 
-        MovieItemViewHolder holder = MovieItemViewHolder.create(parent);
+        MovieItemViewHolder holder = MovieItemViewHolder.create(parent, mPicasso);
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position != RecyclerView.NO_POSITION && mMovieTappedListener != null) {
@@ -124,15 +127,17 @@ public class MoviesListAdapter extends PagedListAdapter<Movie, RecyclerView.View
         @BindView(R.id.movie_rating_view)
         TextView mRatingView;
 
-        MovieItemViewHolder(View itemView) {
+        private Picasso mPicasso;
+
+        MovieItemViewHolder(View itemView, Picasso picasso) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            mPicasso = picasso;
         }
 
         void bindMovie(Movie movie) {
             if (movie.getPosterPath() != null) {
-                Picasso.with(itemView.getContext())
-                        .load(WebServiceUtils.buildMoviePosterUri(movie.getPosterPath()))
+                mPicasso.load(WebServiceUtils.buildMoviePosterUri(movie.getPosterPath()))
                         .placeholder(R.drawable.image_placeholder)
                         .into(mPosterView);
             } else {
@@ -143,11 +148,11 @@ public class MoviesListAdapter extends PagedListAdapter<Movie, RecyclerView.View
             mRatingView.setText(String.format(Locale.US, "%.1f", movie.getVoteAverage()));
         }
 
-        static MovieItemViewHolder create(@NonNull ViewGroup parent) {
+        static MovieItemViewHolder create(@NonNull ViewGroup parent, Picasso picasso) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.list_item_movie, parent, false);
 
-            return new MovieItemViewHolder(itemView);
+            return new MovieItemViewHolder(itemView, picasso);
         }
     }
 

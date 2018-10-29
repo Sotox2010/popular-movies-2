@@ -3,7 +3,17 @@ package com.jesussoto.android.popularmovies.api;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.jesussoto.android.popularmovies.BuildConfig;
+import com.jesussoto.android.popularmovies.util.DateTimeUtils;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -14,32 +24,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WebServiceUtils {
 
     private WebServiceUtils() { }
-
-    private static WebService sWebService = null;
-
-    @NonNull
-    public static synchronized WebService getWebService() {
-        if (sWebService == null) {
-            OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
-                    .addInterceptor(new AuthInterceptor());
-
-            if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-                clientBuilder.addInterceptor(loggingInterceptor);
-            }
-
-            sWebService = new Retrofit.Builder()
-                    .baseUrl(BuildConfig.TMDB_API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(clientBuilder.build())
-                    .build()
-                    .create(WebService.class);
-        }
-
-        return sWebService;
-    }
 
     @NonNull
     public static Uri buildMoviePosterUri(@NonNull String moviePosterPath) {
@@ -55,5 +39,30 @@ public class WebServiceUtils {
                 .appendPath(WebService.PATH_BACKDROP_SIZE)
                 .appendPath(movieBackdropPath.substring(1))
                 .build();
+    }
+
+
+    public static Uri buildYoutubeThumbUri(String videoKey) {
+        return Uri.parse("https://img.youtube.com/vi").buildUpon()
+                .appendPath(videoKey)
+                .appendPath("default.jpg")
+                .build();
+    }
+
+    public static class JsonDateDeserializer implements JsonDeserializer<Date> {
+        @Override
+        public Date deserialize(JsonElement jsonElement, Type typeOfT,
+                                JsonDeserializationContext context) throws JsonParseException {
+            String dateString = jsonElement.getAsString();
+            if (dateString == null) {
+                return null;
+            }
+
+            try {
+                return DateTimeUtils.parseServerDate(jsonElement.getAsString());
+            } catch (Throwable t) {
+                return null;
+            }
+        }
     }
 }

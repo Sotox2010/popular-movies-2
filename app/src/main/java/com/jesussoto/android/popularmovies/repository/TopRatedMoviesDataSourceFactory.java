@@ -6,7 +6,7 @@ import android.arch.paging.DataSource;
 import android.support.annotation.NonNull;
 
 import com.jesussoto.android.popularmovies.api.WebService;
-import com.jesussoto.android.popularmovies.model.Movie;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 
 public class TopRatedMoviesDataSourceFactory extends DataSource.Factory<Integer, Movie> {
 

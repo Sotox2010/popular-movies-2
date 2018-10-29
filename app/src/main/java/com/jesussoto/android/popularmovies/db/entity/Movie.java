@@ -1,5 +1,8 @@
-package com.jesussoto.android.popularmovies.model;
+package com.jesussoto.android.popularmovies.db.entity;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -8,36 +11,41 @@ import android.support.v7.util.DiffUtil;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
+@Entity(tableName = "movie")
 public class Movie implements Parcelable {
-
+    
+    @ColumnInfo(name = "vote_count")
     @SerializedName("vote_count")
     private Integer voteCount;
 
+    @PrimaryKey
     @SerializedName("id")
     private Long id;
 
+    @ColumnInfo(name = "video")
     @SerializedName("video")
     private Boolean video;
 
+    @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
     private Float voteAverage;
 
+    @ColumnInfo(name = "title")
     @SerializedName("title")
     private String title;
 
+    @ColumnInfo(name = "popularity")
     @SerializedName("popularity")
     private Float popularity;
 
     @Nullable
+    @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
     private String posterPath;
 
+    @ColumnInfo(name = "original_language")
     @SerializedName("original_language")
     private String originalLanguage;
 
@@ -45,14 +53,22 @@ public class Movie implements Parcelable {
     private String originalTitle;
 
     @Nullable
+    @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
     private String backdropPath;
 
+    @ColumnInfo(name = "overview")
     @SerializedName("overview")
     private String overview;
 
+    @Nullable
+    @ColumnInfo(name = "release_date")
     @SerializedName("release_date")
-    private String releaseDate;
+    private Date releaseDate;
+
+    public Movie() {
+
+    }
 
     protected Movie(Parcel in) {
         if (in.readByte() == 0) {
@@ -83,7 +99,9 @@ public class Movie implements Parcelable {
         originalTitle = in.readString();
         backdropPath = in.readString();
         overview = in.readString();
-        releaseDate = in.readString();
+
+        long millis = in.readLong();
+        releaseDate = millis == -1L ? null : new Date(millis);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -144,14 +162,57 @@ public class Movie implements Parcelable {
         return overview;
     }
 
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setVideo(Boolean video) {
+        this.video = video;
+    }
+
+    public void setVoteAverage(Float voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPopularity(Float popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setPosterPath(@Nullable String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public void setBackdropPath(@Nullable String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setReleaseDate(@Nullable Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    @Nullable
     public Date getReleaseDate() {
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        try {
-            return formatter.parse(releaseDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return releaseDate;
     }
 
     @Override
@@ -192,11 +253,15 @@ public class Movie implements Parcelable {
         dest.writeString(originalTitle);
         dest.writeString(backdropPath);
         dest.writeString(overview);
-        dest.writeString(releaseDate);
+        dest.writeLong(releaseDate == null ? -1L : releaseDate.getTime());
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (!(obj instanceof Movie)) {
+            return false;
+        }
+
         if (obj == this)
             return true;
 

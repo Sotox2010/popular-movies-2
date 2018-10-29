@@ -2,8 +2,9 @@ package com.jesussoto.android.popularmovies.repository;
 
 import android.support.annotation.NonNull;
 
-import com.jesussoto.android.popularmovies.api.MoviesResponse;
 import com.jesussoto.android.popularmovies.api.WebService;
+import com.jesussoto.android.popularmovies.api.response.PagedResultResponse;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 
 import retrofit2.Call;
 
@@ -17,7 +18,7 @@ public class TopRatedMoviesPageKeyedDataSource extends AbstractMoviesPageKeyedDa
     }
 
     @Override
-    Call<MoviesResponse> getCall(@NonNull WebService service, int page) {
-        return service.getTopRatedMovieCall(page);
+    Call<PagedResultResponse<Movie>> getCall(@NonNull WebService service, int page) {
+        return service.getTopRatedMoviesCall(page);
     }
 }

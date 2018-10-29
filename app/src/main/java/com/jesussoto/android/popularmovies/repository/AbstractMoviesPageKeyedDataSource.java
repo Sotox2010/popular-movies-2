@@ -5,10 +5,10 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PageKeyedDataSource;
 import android.support.annotation.NonNull;
 
-import com.jesussoto.android.popularmovies.api.MoviesResponse;
 import com.jesussoto.android.popularmovies.api.Resource;
 import com.jesussoto.android.popularmovies.api.WebService;
-import com.jesussoto.android.popularmovies.model.Movie;
+import com.jesussoto.android.popularmovies.api.response.PagedResultResponse;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,12 +49,12 @@ public abstract class AbstractMoviesPageKeyedDataSource extends PageKeyedDataSou
                             @NonNull LoadInitialCallback<Integer, Movie> callback) {
 
         int initialPage = 1;
-        Call<MoviesResponse> request = getCall(mService, initialPage);
+        Call<PagedResultResponse<Movie>> request = getCall(mService, initialPage);
         mNetworkState.postValue(Resource.Status.LOADING);
         mInitialLoad.postValue(Resource.Status.LOADING);
 
         try {
-            Response<MoviesResponse> response = request.execute();
+            Response<PagedResultResponse<Movie>> response = request.execute();
             List<Movie> movies = response.body().getResults();
             callback.onResult(movies, null, initialPage + 1);
             mNetworkState.postValue(Resource.Status.SUCCESS);
@@ -79,19 +79,13 @@ public abstract class AbstractMoviesPageKeyedDataSource extends PageKeyedDataSou
     public void loadAfter(@NonNull LoadParams<Integer> params,
                           @NonNull LoadCallback<Integer, Movie> callback) {
 
-        Call<MoviesResponse> request = getCall(mService, params.key);
+        Call<PagedResultResponse<Movie>> request = getCall(mService, params.key);
         mNetworkState.postValue(Resource.Status.LOADING);
 
-        /*try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-        request.enqueue(new Callback<MoviesResponse>() {
+        request.enqueue(new Callback<PagedResultResponse<Movie>>() {
             @Override
-            public void onResponse(@NonNull Call<MoviesResponse> call,
-                                   @NonNull Response<MoviesResponse> response) {
+            public void onResponse(@NonNull Call<PagedResultResponse<Movie>> call,
+                                   @NonNull Response<PagedResultResponse<Movie>> response) {
 
                 if (response.isSuccessful()) {
                     List<Movie> movies = response.body().getResults();
@@ -105,7 +99,7 @@ public abstract class AbstractMoviesPageKeyedDataSource extends PageKeyedDataSou
             }
 
             @Override
-            public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<PagedResultResponse<Movie>> call, @NonNull Throwable t) {
                 mRetryAction = () -> loadAfter(params, callback);
                 mNetworkState.postValue(Resource.Status.ERROR);
             }
@@ -120,7 +114,7 @@ public abstract class AbstractMoviesPageKeyedDataSource extends PageKeyedDataSou
         return mInitialLoad;
     }
 
-    abstract Call<MoviesResponse> getCall(@NonNull WebService service, int page);
+    abstract Call<PagedResultResponse<Movie>> getCall(@NonNull WebService service, int page);
 
     public void retry() {
         Action retry = mRetryAction;

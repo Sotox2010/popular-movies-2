@@ -39,112 +39,206 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
                 android:orientation="vertical"
-                tools:layout_marginTop="200dp"
-                android:clipChildren="false">
+                tools:layout_marginTop="200dp">
 
                 <RelativeLayout
                     android:id="@+id/title_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?colorPrimary"
-                    android:paddingStart="@dimen/keyline_margin"
-                    android:paddingEnd="@dimen/keyline_margin"
-                    android:paddingTop="@dimen/spacing_large"
-                    android:paddingBottom="@dimen/spacing_large"
+                    android:clipChildren="false"
                     android:clipToPadding="false"
-                    android:clipChildren="false">
+                    android:paddingStart="@dimen/keyline_margin"
+                    android:paddingTop="@dimen/spacing_large"
+                    android:paddingEnd="@dimen/keyline_margin"
+                    android:paddingBottom="@dimen/spacing_xlarge">
 
                     <com.jesussoto.android.popularmovies.widget.AspectRatioImageView
                         android:id="@+id/poster"
                         android:layout_width="100dp"
                         android:layout_height="0dp"
-                        app:aspectRatio="@dimen/movie_poster_aspect_ratio"
                         android:layout_marginTop="-64dp"
                         android:layout_marginEnd="@dimen/spacing_large"
                         android:contentDescription="@string/cd_movie_poster"
-                        tools:background="#fff"/>
+                        app:aspectRatio="@dimen/movie_poster_aspect_ratio"
+                        tools:background="#fff" />
 
                     <TextView
-                        style="@style/TextAppearance.Headline6"
                         android:id="@+id/title"
+                        style="@style/TextAppearance.Headline6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/poster"
                         android:fontFamily="sans-serif-condensed"
                         android:textStyle="bold"
-                        tools:text="Avengers: Infinity War"/>
+                        tools:text="Avengers: Infinity War" />
 
                     <TextView
-                        style="@style/TextAppearance.Body1"
                         android:id="@+id/original_title"
+                        style="@style/TextAppearance.Body1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignStart="@id/title"
                         android:layout_below="@id/title"
-                        tools:text="Avengers: Infinity War"/>
+                        android:layout_alignStart="@id/title"
+                        tools:text="Avengers: Infinity War" />
 
                     <TextView
-                        style="@style/TextAppearance.Body2"
                         android:id="@+id/rating"
+                        style="@style/TextAppearance.Body2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_medium"
-                        android:layout_alignStart="@id/original_title"
                         android:layout_below="@id/original_title"
+                        android:layout_alignStart="@id/original_title"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:layout_marginBottom="@dimen/spacing_medium"
                         android:drawableStart="@drawable/ic_star_black_12dp"
-                        android:fontFeatureSettings="onum"
                         android:drawablePadding="@dimen/spacing_medium"
-                        tools:text="8.6 / 10"/>
+                        android:fontFeatureSettings="onum"
+                        tools:text="8.6 / 10" />
 
                     <TextView
-                        style="@style/TextAppearance.Body2"
                         android:id="@+id/release_date"
+                        style="@style/TextAppearance.Body2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_xlarge"
-                        android:layout_alignBaseline="@id/rating"
-                        android:layout_toEndOf="@id/rating"
                         android:layout_below="@id/original_title"
+                        android:layout_alignBaseline="@id/rating"
+                        android:layout_marginStart="@dimen/spacing_xlarge"
+                        android:layout_toEndOf="@id/rating"
                         android:drawableStart="@drawable/ic_date_black_12dp"
                         android:drawablePadding="@dimen/spacing_medium"
                         android:fontFeatureSettings="onum"
-                        tools:text="May. 2018"/>
+                        tools:text="May. 2018" />
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?android:windowBackground"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/spacing_large"
-                    android:paddingBottom="@dimen/spacing_large"
-                    android:paddingStart="@dimen/keyline_margin"
-                    android:paddingEnd="@dimen/keyline_margin"
-                    android:background="?android:windowBackground">
+                    android:paddingBottom="@dimen/spacing_large">
 
                     <TextView
                         android:id="@+id/overview_label"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:gravity="center_vertical"
-                        android:textSize="14sp"
-                        android:text="@string/overview_label"
-                        android:fontFeatureSettings="smcp"
-                        android:letterSpacing="0.1"
+                        android:paddingStart="@dimen/keyline_margin"
+                        android:paddingEnd="@dimen/keyline_margin"
                         android:fontFamily="sans-serif-medium"
-                        android:textColor="@color/colorAccent"/>
+                        android:fontFeatureSettings="smcp"
+                        android:gravity="center_vertical"
+                        android:letterSpacing="0.1"
+                        android:text="@string/section_overview"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="14sp" />
 
                     <TextView
-                        style="@style/TextAppearance.Body2"
                         android:id="@+id/overview"
+                        style="@style/TextAppearance.Body2"
+                        android:paddingStart="@dimen/keyline_margin"
+                        android:paddingEnd="@dimen/keyline_margin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In dapibus felis vitae ipsum aliquam ullamcorper. Phasellus nunc nibh, tincidunt ac pellentesque eget, interdum eget ex. Ut nec mattis dolor, a gravida urna. Maecenas vitae ligula et odio mollis lobortis nec eu libero.\n\nDonec vel odio tellus. Integer leo justo, sollicitudin vitae consequat pharetra, pretium a purus. Ut sit amet nibh elementum, vestibulum velit non, pellentesque diam. Fusce et mauris in erat tincidunt volutpat at vitae mauris. Aenean et felis sed urna ornare tempor et vel mi.\n\nDuis aliquam libero vel ex posuere imperdiet. Maecenas arcu est, euismod vel erat et, placerat fermentum enim. Phasellus viverra faucibus nulla nec mollis. Curabitur in leo ut risus pharetra dictum. Donec magna neque, tempor in orci at, faucibus luctus justo. Nunc tempus blandit lorem, at cursus ante mattis id."/>
+                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In dapibus felis vitae ipsum aliquam ullamcorper. Phasellus nunc nibh, tincidunt ac pellentesque eget, interdum eget ex. Ut nec mattis dolor, a gravida urna. Maecenas vitae ligula et odio mollis lobortis nec eu libero.\n\nDonec vel odio tellus. Integer leo justo, sollicitudin vitae consequat pharetra, pretium a purus. Ut sit amet nibh elementum, vestibulum velit non, pellentesque diam. Fusce et mauris in erat tincidunt volutpat at vitae mauris. Aenean et felis sed urna ornare tempor et vel mi." />
+
+                    <TextView
+                        android:id="@+id/videos_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="@dimen/spacing_medium_large"
+                        android:paddingStart="@dimen/keyline_margin"
+                        android:paddingEnd="@dimen/keyline_margin"
+                        android:fontFamily="sans-serif-medium"
+                        android:fontFeatureSettings="smcp"
+                        android:gravity="center_vertical"
+                        android:letterSpacing="0.1"
+                        android:text="@string/section_videos"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="14sp" />
+
+                    <FrameLayout
+                        android:id="@+id/videos_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <include layout="@layout/include_empty_view"
+                            android:id="@+id/empty_videos"
+                            android:visibility="gone"/>
+
+                        <ProgressBar
+                            android:id="@+id/videos_progress_bar"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"/>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycler_view_videos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/keyline_margin"
+                            android:paddingEnd="@dimen/keyline_margin"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"/>
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/reviews_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="@dimen/spacing_medium_large"
+                        android:paddingStart="@dimen/keyline_margin"
+                        android:paddingEnd="@dimen/keyline_margin"
+                        android:fontFamily="sans-serif-medium"
+                        android:fontFeatureSettings="smcp"
+                        android:gravity="center_vertical"
+                        android:letterSpacing="0.1"
+                        android:text="@string/section_reviews"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="14sp" />
+
+                    <FrameLayout
+                        android:id="@+id/reviews_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <include layout="@layout/include_empty_view"
+                            android:id="@+id/empty_reviews"
+                            android:visibility="gone"/>
+
+                        <ProgressBar
+                            android:id="@+id/reviews_progress_bar"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"/>
+
+                        <LinearLayout
+                            android:id="@+id/reviews"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:divider="@drawable/divider_horizontal"
+                            android:showDividers="middle"/>
+
+                    </FrameLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
+
+            <com.jesussoto.android.popularmovies.widget.CheckableFloatingActionButton
+                android:id="@+id/fab_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/keyline_margin"
+                android:src="@drawable/ic_star_checkable"
+                app:fabSize="normal"
+                tools:layout_marginTop="300dp"/>
 
         </FrameLayout>
 

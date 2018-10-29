@@ -3,20 +3,28 @@
 
     <string name="error_connection">There was an error while retrieving movies. Check your connection and try again.</string>
     <string name="retry">Retry</string>
+    <string name="empty_favorites">You have not marked any movie as favorite.</string>
 
     <string name="filter_popular_movies">Popular Movies</string>
     <string name="filter_top_rated_movies">Top Rated Movies</string>
+    <string name="filter_favorite_movies">Favorite Movies</string>
 
     <string-array name="movie_filters">
         <item>@string/filter_popular_movies</item>
         <item>@string/filter_top_rated_movies</item>
+        <item>@string/filter_favorite_movies</item>
     </string-array>
 
-
     <!-- Detail screen -->
-    <string name="overview_label">Overview</string>
+    <string name="section_overview">Overview</string>
+    <string name="section_videos">Videos</string>
+    <string name="section_reviews">Reviews</string>
     <string name="rating_format">%.1f / 10</string>
     <string name="cd_movie_poster">movie poster</string>
     <string name="cd_movie_backdrop">movie backdrop</string>
+    <string name="empty_videos">There are no videos for this movie.</string>
+    <string name="empty_reviews">There are no reviews for this movie.</string>
+    <string name="msg_added_to_favorites">Movie added to favorites.</string>
+    <string name="msg_removed_from_favorites">Movie removed from favorites.</string>
 
 </resources>

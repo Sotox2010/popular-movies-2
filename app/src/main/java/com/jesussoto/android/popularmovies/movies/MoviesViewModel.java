@@ -8,10 +8,10 @@ import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.jesussoto.android.popularmovies.api.Resource;
-import com.jesussoto.android.popularmovies.model.Movie;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 import com.jesussoto.android.popularmovies.repository.MoviesRepository;
 
-import java.util.List;
+import javax.inject.Inject;
 
 public class MoviesViewModel extends ViewModel {
 
@@ -23,14 +23,15 @@ public class MoviesViewModel extends ViewModel {
     // filtering.
     private MoviesListing mPopularMoviesListing;
     private MoviesListing mTopRatedMoviesListing;
+    private MoviesListing mFavoriteMoviesListing;
 
-    MoviesViewModel() {
-        // This repo should be preferable injected from outside using D.I.
-        mRepository = MoviesRepository.getInstance();
-
+    @Inject
+    MoviesViewModel(MoviesRepository repository) {
+        mRepository = repository;
         mFilteringLiveData = new MutableLiveData<>();
         mPopularMoviesListing = mRepository.getPopularMoviesListing();
         mTopRatedMoviesListing = mRepository.getTopRatedMoviesListing();
+        mFavoriteMoviesListing = mRepository.getFavoriteMoviesListing();
     }
 
     /**
@@ -87,9 +88,16 @@ public class MoviesViewModel extends ViewModel {
      * @return {@link LiveData} wrapping the filtered movies paged data source.
      */
     private LiveData<PagedList<Movie>> getMoviesByFilter(@NonNull MovieFilterType filter) {
-        return filter == MovieFilterType.POPULAR_MOVIES
-                ? mPopularMoviesListing.getPagedList()
-                : mTopRatedMoviesListing.getPagedList();
+        switch (filter) {
+            case POPULAR_MOVIES:
+                return mPopularMoviesListing.getPagedList();
+            case TOP_RATED_MOVIES:
+                return mTopRatedMoviesListing.getPagedList();
+            case FAVORITE_MOVIES:
+                return mFavoriteMoviesListing.getPagedList();
+            default:
+                throw new IllegalArgumentException("Not recognized filter.");
+        }
     }
 
     /**
@@ -99,9 +107,16 @@ public class MoviesViewModel extends ViewModel {
      * @return {@link LiveData} wrapping the network state.
      */
     private LiveData<Resource.Status> getNetworkStateByFilter(@NonNull MovieFilterType filter) {
-        return filter == MovieFilterType.POPULAR_MOVIES
-                ? mPopularMoviesListing.getNetworkState()
-                : mTopRatedMoviesListing.getNetworkState();
+        switch (filter) {
+            case POPULAR_MOVIES:
+                return mPopularMoviesListing.getNetworkState();
+            case TOP_RATED_MOVIES:
+                return mTopRatedMoviesListing.getNetworkState();
+            case FAVORITE_MOVIES:
+                return mFavoriteMoviesListing.getNetworkState();
+            default:
+                return null;
+        }
     }
 
     /**
@@ -111,9 +126,16 @@ public class MoviesViewModel extends ViewModel {
      * @return {@link LiveData} wrapping the network state.
      */
     private LiveData<Resource.Status> getInitialLoadStateByFilter(@NonNull MovieFilterType filter) {
-        return filter == MovieFilterType.POPULAR_MOVIES
-                ? mPopularMoviesListing.getInitialLoadState()
-                : mTopRatedMoviesListing.getInitialLoadState();
+        switch (filter) {
+            case POPULAR_MOVIES:
+                return mPopularMoviesListing.getInitialLoadState();
+            case TOP_RATED_MOVIES:
+                return mTopRatedMoviesListing.getInitialLoadState();
+            case FAVORITE_MOVIES:
+                return mFavoriteMoviesListing.getInitialLoadState();
+            default:
+                return null;
+        }
     }
 
     /**

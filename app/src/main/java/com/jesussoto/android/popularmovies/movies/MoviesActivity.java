@@ -1,5 +1,6 @@
 package com.jesussoto.android.popularmovies.movies;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +18,16 @@ import android.widget.Spinner;
 
 import com.jesussoto.android.popularmovies.R;
 import com.jesussoto.android.popularmovies.api.Resource;
-import com.jesussoto.android.popularmovies.model.Movie;
+import com.jesussoto.android.popularmovies.db.entity.Movie;
 import com.jesussoto.android.popularmovies.moviedetail.MovieDetailActivity;
 import com.jesussoto.android.popularmovies.widget.AlwaysEnterToolbarScrollListener;
+import com.squareup.picasso.Picasso;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 
 public class MoviesActivity extends AppCompatActivity {
 
@@ -40,6 +45,12 @@ public class MoviesActivity extends AppCompatActivity {
     @BindView(R.id.empty_container)
     ViewGroup mEmptyContainer;
 
+    @Inject
+    ViewModelProvider.Factory mViewModelFactory;
+
+    @Inject
+    Picasso mPicasso;
+
     private MoviesListAdapter mAdapter;
 
     private AlwaysEnterToolbarScrollListener mAlwaysEnterToolbarScrollListener;
@@ -48,6 +59,8 @@ public class MoviesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
         ButterKnife.bind(this);
@@ -88,7 +101,7 @@ public class MoviesActivity extends AppCompatActivity {
      * Bind to the view model to react to data changes.
      */
     private void bindViewModel() {
-        mViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(MoviesViewModel.class);
 
         mViewModel.getMoviesPagedList().observe(
                 this, pagedList -> mAdapter.submitList(pagedList));
@@ -122,9 +135,13 @@ public class MoviesActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mViewModel.setFiltering(position == 0
-                        ? MovieFilterType.POPULAR_MOVIES
-                        : MovieFilterType.TOP_RATED_MOVIES);
+                if (position == 0) {
+                    mViewModel.setFiltering(MovieFilterType.POPULAR_MOVIES);
+                } else if (position == 1) {
+                    mViewModel.setFiltering(MovieFilterType.TOP_RATED_MOVIES);
+                } else {
+                    mViewModel.setFiltering(MovieFilterType.FAVORITE_MOVIES);
+                }
             }
 
             @Override
@@ -141,7 +158,7 @@ public class MoviesActivity extends AppCompatActivity {
         int spanCount = getResources().getInteger(R.integer.movie_grid_span_count);
         mAlwaysEnterToolbarScrollListener = new AlwaysEnterToolbarScrollListener(mToolbar);
 
-        mAdapter = new MoviesListAdapter(() -> mViewModel.retryLastFetch());
+        mAdapter = new MoviesListAdapter(mPicasso, () -> mViewModel.retryLastFetch());
         mAdapter.setOnMovieTappedListener(this::navigateToMovieDetail);
 
         // This grid layout manager with custom span size lookup will ensure that the 'loading' view

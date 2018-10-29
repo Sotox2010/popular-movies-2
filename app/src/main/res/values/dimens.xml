@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Aspect ratio -->
+    <!-- Keylines -->
     <dimen name="keyline_margin">16dp</dimen>
     <dimen name="keyline_content_start">72dp</dimen>
 
     <!-- Aspect ratio -->
     <dimen name="movie_poster_aspect_ratio">0.667870</dimen>
     <dimen name="movie_backdrop_aspect_ratio">1.781250</dimen>
+    <dimen name="movie_video_thumb_aspect_ratio">1.777778</dimen>
 
     <!-- Common spacing -->
     <dimen name="spacing_small">4dp</dimen>

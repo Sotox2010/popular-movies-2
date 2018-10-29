@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_large"
+    android:paddingStart="@dimen/keyline_margin"
+    android:paddingEnd="@dimen/keyline_margin">
+
+    <TextView
+        style="@style/TextAppearance.Body2"
+        android:id="@+id/review_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:fontFeatureSettings="smcp"
+        android:letterSpacing="0.1"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="@dimen/text_size_medium"
+        tools:text="Jesus Soto"/>
+
+    <TextView
+        style="@style/TextAppearance.Body2"
+        android:id="@+id/review_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        tools:text="Trailer #1"/>
+
+</LinearLayout>
